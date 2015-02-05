@@ -28,7 +28,7 @@ module Middleman
           end
 
           puts "## Deploying via rsync to #{dest_url} port=#{self.port}"
-          exec command
+          system(command)
         end
       end
     end

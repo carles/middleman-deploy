@@ -52,14 +52,17 @@ module Middleman
         method_class_name = "Middleman::Deploy::Methods::#{camelized_method}"
         method_instance   = method_class_name.constantize.new(server_instance, self.deploy_options)
 
+        self.deploy_options.before.call if self.deploy_options.before
         method_instance.process
+        self.deploy_options.after.call if self.deploy_options.after
       end
 
       def deploy_options
         options = nil
 
         begin
-          options = ::Middleman::Application.server.inst.options
+          options = $options || ::Middleman::Application.server.inst.options
+          $options = options
         rescue NoMethodError
           print_usage_and_die 'You need to activate the deploy extension in config.rb.'
         end
